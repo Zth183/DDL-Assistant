@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>期末全能助手 - 在线工具</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- ========== APP SHELL ========== -->
+    <div id="app">
+        <!-- Loading Screen -->
+        <div class="loading-screen" id="loadingScreen">
+            <div class="loading-content">
+                <div class="loading-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h2>期末全能助手</h2>
+                <div class="loading-bar"><div class="loading-fill"></div></div>
+                <p>正在加载智能引擎...</p>
+            </div>
+        </div>
+
+        <!-- Top Navigation -->
+        <header class="app-header">
+            <div class="header-inner">
+                <div class="header-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>期末全能助手</span>
+                </div>
+                <!-- Steps indicator -->
+                <div class="step-indicator" id="stepIndicator">
+                    <div class="step-dot active" data-step="1">
+                        <span class="step-num">1</span>
+                        <span class="step-label">基本信息</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-dot" data-step="2">
+                        <span class="step-num">2</span>
+                        <span class="step-label">添加任务</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-dot" data-step="3">
+                        <span class="step-num">3</span>
+                        <span class="step-label">生成方案</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" id="resetBtn" title="重新开始">
+                        <i class="fas fa-rotate"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- ========== STEP 1: WELCOME & INFO ========== -->
+        <main class="app-main">
+            <div class="page step-1 active" id="step1Page">
+                <div class="page-container narrow">
+                    <div class="welcome-section">
+                        <div class="welcome-bg-deco">
+                            <img src="images/icetea.jpg" alt="冰红茶" class="welcome-deco-img">
+                        </div>
+                        <div class="welcome-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h1 class="welcome-title">欢迎来到<span class="gradient-text">期末全能助手</span></h1>
+                        <p class="welcome-desc">
+                            输入你的各科任务，AI 自动为你生成<span class="highlight">学习计划、知识清单、作业指引和 Pre 材料</span>，一站式搞定期末！
+                        </p>
+                    </div>
+
+                    <!-- User Info Form -->
+                    <div class="form-card">
+                        <h2 class="form-title"><i class="fas fa-user"></i> 先认识一下你</h2>
+                        <div class="form-group">
+                            <label>怎么称呼你？ <span class="required">*</span></label>
+                            <input type="text" id="userNameInput" class="form-input" placeholder="输入你的名字或昵称" maxlength="20">
+                        </div>
+
+                        <div class="form-divider">
+                            <span>可选配置</span>
+                        </div>
+
+                        <!-- API Config Toggle -->
+                        <div class="toggle-group">
+                            <div class="toggle-row" id="apiToggle">
+                                <div class="toggle-info">
+                                    <i class="fas fa-key"></i>
+                                    <span>接入个人 AI API（可选）</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="apiSwitch">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="api-config" id="apiConfigArea">
+                                <div class="form-group">
+                                    <label>API 地址</label>
+                                    <input type="text" id="apiEndpoint" class="form-input" placeholder="https://api.openai.com/v1/chat/completions">
+                                </div>
+                                <div class="form-group">
+                                    <label>API Key</label>
+                                    <input type="password" id="apiKey" class="form-input" placeholder="sk-...">
+                                </div>
+                                <div class="form-group">
+                                    <label>模型名称</label>
+                                    <input type="text" id="apiModel" class="form-input" value="gpt-4o" placeholder="gpt-4o">
+                                </div>
+                                <p class="form-tip"><i class="fas fa-info-circle"></i> 接入后生成的计划将更贴合你的个人需求。不接入则使用内置引擎工作。</p>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-block" id="step1Next">
+                            <span>下一步：添加任务</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== STEP 2: TASK INPUT ========== -->
+            <div class="page step-2" id="step2Page">
+                <div class="page-container">
+                    <div class="page-header">
+                        <h2><i class="fas fa-tasks"></i> 添加期末任务</h2>
+                        <p>添加你的各学科任务——作业、考试或 Pre，我会为你智能规划</p>
+                    </div>
+
+                    <!-- Task List -->
+                    <div class="task-list" id="taskList">
+                        <!-- Tasks rendered by JS -->
+                        <div class="task-empty" id="taskEmpty">
+                            <i class="fas fa-inbox"></i>
+                            <p>还没有添加任务，点击下方按钮开始</p>
+                        </div>
+                    </div>
+
+                    <!-- Add Task Button -->
+                    <button class="btn btn-outline btn-block" id="addTaskBtn">
+                        <i class="fas fa-plus"></i> 添加任务
+                    </button>
+
+                    <!-- Action Buttons -->
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" id="step2Back">
+                            <i class="fas fa-arrow-left"></i> 上一步
+                        </button>
+                        <button class="btn btn-primary" id="step2Next" disabled>
+                            <span>生成全套方案</span>
+                            <i class="fas fa-magic"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== STEP 3: DASHBOARD ========== -->
+            <div class="page step-3" id="step3Page">
+                <div class="page-container full">
+                    <!-- Dashboard Header -->
+                    <div class="dashboard-header">
+                        <div class="dash-greeting">
+                            <h2><span id="dashUserName">同学</span>，这是为你定制的 <span class="gradient-text">期末方案</span></h2>
+                            <p id="dashDate"></p>
+                        </div>
+                        <div class="dash-actions">
+                            <button class="btn btn-outline" id="exportBtn"><i class="fas fa-download"></i> 导出全部</button>
+                            <button class="btn btn-secondary" id="dashBackBtn"><i class="fas fa-edit"></i> 修改任务</button>
+                        </div>
+                    </div>
+
+                    <!-- Stats Overview -->
+                    <div class="dash-stats" id="dashStats"></div>
+
+                    <!-- Dashboard Tabs -->
+                    <div class="dash-tabs" id="dashTabs">
+                        <button class="dash-tab active" data-tab="schedule">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>计划表</span>
+                        </button>
+                        <button class="dash-tab" data-tab="homework">
+                            <i class="fas fa-pen-fancy"></i>
+                            <span>作业清单</span>
+                        </button>
+                        <button class="dash-tab" data-tab="knowledge">
+                            <i class="fas fa-brain"></i>
+                            <span>知识点清单</span>
+                        </button>
+                        <button class="dash-tab" data-tab="presentation">
+                            <i class="fas fa-chalkboard"></i>
+                            <span>Pre辅助材料</span>
+                        </button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="dash-content">
+                        <!-- Schedule -->
+                        <div class="tab-panel active" id="tabSchedule">
+                            <div class="tab-toolbar">
+                                <h3><i class="fas fa-calendar-alt"></i> 学习计划表</h3>
+                                <button class="btn btn-sm btn-outline" id="refreshScheduleBtn"><i class="fas fa-rotate"></i> 重新生成</button>
+                            </div>
+                            <div id="scheduleContent" class="gen-content"></div>
+                        </div>
+
+                        <!-- Homework -->
+                        <div class="tab-panel" id="tabHomework">
+                            <div class="tab-toolbar">
+                                <h3><i class="fas fa-pen-fancy"></i> 作业清单与指导</h3>
+                                <button class="btn btn-sm btn-outline" id="refreshHomeworkBtn"><i class="fas fa-rotate"></i> 重新生成</button>
+                            </div>
+                            <div id="homeworkContent" class="gen-content"></div>
+                        </div>
+
+                        <!-- Knowledge -->
+                        <div class="tab-panel" id="tabKnowledge">
+                            <div class="tab-toolbar">
+                                <h3><i class="fas fa-brain"></i> 考试知识点清单</h3>
+                                <button class="btn btn-sm btn-outline" id="refreshKnowledgeBtn"><i class="fas fa-rotate"></i> 重新生成</button>
+                            </div>
+                            <div id="knowledgeContent" class="gen-content"></div>
+                        </div>
+
+                        <!-- Presentation -->
+                        <div class="tab-panel" id="tabPresentation">
+                            <div class="tab-toolbar">
+                                <h3><i class="fas fa-chalkboard"></i> Pre辅助材料</h3>
+                                <div class="tab-toolbar-actions">
+                                    <button class="btn btn-sm btn-outline" id="exportPreWordBtn"><i class="fas fa-file-word"></i> 下载演讲稿</button>
+                                    <button class="btn btn-sm btn-outline" id="refreshPreBtn"><i class="fas fa-rotate"></i> 重新生成</button>
+                                </div>
+                            </div>
+                            <div id="preContent" class="gen-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- ========== TASK MODAL ========== -->
+        <div class="modal-overlay" id="taskModal">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3 id="modalTitle">添加任务</h3>
+                    <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>科目名称 <span class="required">*</span></label>
+                        <input type="text" id="taskSubject" class="form-input" placeholder="如：高等数学、大学英语..." list="subjectSuggestions">
+                        <datalist id="subjectSuggestions">
+                            <option value="高等数学"><option value="线性代数"><option value="概率论与数理统计">
+                            <option value="大学英语"><option value="大学物理"><option value="C语言程序设计">
+                            <option value="数据结构"><option value="操作系统"><option value="计算机网络">
+                            <option value="软件工程"><option value="数据库原理"><option value="计算机组成原理">
+                            <option value="马克思主义原理"><option value="毛概"><option value="思修">
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>任务类型 <span class="required">*</span></label>
+                        <div class="radio-group" id="taskTypeGroup">
+                            <label class="radio-card">
+                                <input type="radio" name="taskType" value="作业" checked>
+                                <div class="radio-content">
+                                    <i class="fas fa-file-alt" style="color:#6366f1"></i>
+                                    <span>作业</span>
+                                </div>
+                            </label>
+                            <label class="radio-card">
+                                <input type="radio" name="taskType" value="考试">
+                                <div class="radio-content">
+                                    <i class="fas fa-pencil-alt" style="color:#ec4899"></i>
+                                    <span>考试</span>
+                                </div>
+                            </label>
+                            <label class="radio-card">
+                                <input type="radio" name="taskType" value="Pre">
+                                <div class="radio-content">
+                                    <i class="fas fa-chalkboard" style="color:#06b6d4"></i>
+                                    <span>Pre</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>截止日期 <span class="required">*</span></label>
+                        <input type="date" id="taskDeadline" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>主题 / 描述</label>
+                        <textarea id="taskDescription" class="form-input form-textarea" placeholder="简述任务主题或范围，如：第三章至第五章、论文题目等" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>已有资料 <span style="font-weight:400;font-size:0.8rem;color:var(--neutral-400)">（文字说明 + 文件上传）</span></label>
+                        <textarea id="taskMaterials" class="form-input form-textarea" placeholder="描述你已有的资料，如教材章节、参考文献等" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <div class="file-upload-zone" id="fileDropZone">
+                            <input type="file" id="fileInput" multiple hidden accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.md,.png,.jpg,.jpeg,.zip">
+                            <div class="file-upload-placeholder" id="fileUploadPlaceholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p><strong>点击上传</strong> 或拖拽文件到这里</p>
+                                <span>支持 PDF、Word、PPT、TXT、图片、ZIP 等格式（单个文件 ≤ 10MB）</span>
+                            </div>
+                        </div>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="modalCancel">取消</button>
+                    <button class="btn btn-primary" id="modalSave">保存任务</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CONFIRM DIALOG ========== -->
+        <div class="modal-overlay" id="confirmModal">
+            <div class="modal-container modal-sm">
+                <div class="modal-header">
+                    <h3>确认操作</h3>
+                </div>
+                <div class="modal-body" id="confirmBody">
+                    <p>确定要清空所有数据重新开始吗？</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="confirmCancel">取消</button>
+                    <button class="btn btn-danger" id="confirmOk">确认</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TOAST ========== -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
