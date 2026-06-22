@@ -1656,17 +1656,25 @@ function init() {
         lingyi:       { endpoint: 'https://api.lingyiwanwu.com/v1/chat/completions', model: 'yi-lightning' },
         api2d:        { endpoint: 'https://openapi.api2d.net/v1/chat/completions', model: 'gpt-4o' }
     };
-    el.apiPreset.addEventListener('change', () => {
-        const val = el.apiPreset.value;
-        if (val && API_PRESETS[val]) {
-            const preset = API_PRESETS[val];
-            el.apiEndpoint.value = preset.endpoint;
-            el.apiModel.value = preset.model;
-        } else {
-            el.apiEndpoint.value = '';
-            el.apiModel.value = 'gpt-4o';
-        }
-    });
+    // API preset card selection
+    const presetGrid = document.getElementById('apiPresetGrid');
+    if (presetGrid) {
+        presetGrid.addEventListener('click', (e) => {
+            const card = e.target.closest('.api-preset-card');
+            if (!card) return;
+            const val = card.dataset.preset;
+            // Toggle active class
+            presetGrid.querySelectorAll('.api-preset-card').forEach(c => c.classList.remove('active'));
+            if (!card.classList.contains('active')) {
+                card.classList.add('active');
+            }
+            if (val && API_PRESETS[val]) {
+                const preset = API_PRESETS[val];
+                el.apiEndpoint.value = preset.endpoint;
+                el.apiModel.value = preset.model;
+            }
+        });
+    }
 
     // Step 2: Add task
     el.addTaskBtn.addEventListener('click', openAddModal);

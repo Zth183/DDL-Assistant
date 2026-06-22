@@ -147,6 +147,20 @@ input, textarea, button { font-family: var(--font); outline: none; }
 .form-tip { font-size: 0.8rem; color: var(--neutral-400); margin-top: 4px; }
 .form-tip i { margin-right: 4px; }
 
+/* ===== API PRESET CARDS ===== */
+.api-preset-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 4px; }
+.api-preset-card {
+    padding: 10px 8px; border: 1.5px solid var(--neutral-200); border-radius: var(--radius-sm);
+    text-align: center; cursor: pointer; transition: all 0.2s ease; background: white;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.api-preset-card:hover { border-color: var(--primary-300); background: var(--primary-50); transform: translateY(-1px); }
+.api-preset-card.active { border-color: var(--primary-500); background: rgba(99,102,241,0.08); box-shadow: 0 0 0 2px rgba(99,102,241,0.15); }
+.api-preset-name { font-size: 0.8rem; font-weight: 700; color: var(--neutral-700); }
+.api-preset-desc { font-size: 0.62rem; color: var(--neutral-400); line-height: 1.2; }
+.api-preset-card.active .api-preset-name { color: var(--primary-600); }
+@media (max-width: 500px) { .api-preset-grid { grid-template-columns: repeat(2, 1fr); } }
+
 /* ===== FILE UPLOAD ===== */
 .file-upload-zone {
     border: 2px dashed var(--neutral-300); border-radius: var(--radius); padding: 28px 20px;
