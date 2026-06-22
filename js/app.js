@@ -6,7 +6,7 @@
 
 // ===================== STATE =====================
 const state = {
-    user: { name: '', useAPI: false, apiKey: '', apiEndpoint: '', apiModel: 'gpt-4o' },
+    user: { name: '', useAPI: false, apiKey: '', apiEndpoint: '', apiModel: 'gpt-4o', apiPreset: '' },
     tasks: [],
     editId: null,
     currentModalFiles: [],   // files in the modal before saving
@@ -33,6 +33,7 @@ const el = {
     apiEndpoint: $('apiEndpoint'),
     apiKey: $('apiKey'),
     apiModel: $('apiModel'),
+    apiPreset: $('apiPreset'),
     step1Next: $('step1Next'),
     // Step 2
     taskList: $('taskList'),
@@ -1634,6 +1635,7 @@ function init() {
         state.user.apiEndpoint = el.apiEndpoint.value.trim();
         state.user.apiKey = el.apiKey.value.trim();
         state.user.apiModel = el.apiModel.value.trim();
+        state.user.apiPreset = el.apiPreset.value;
         saveState();
         goToStep(2);
     });
@@ -1641,6 +1643,29 @@ function init() {
     // API toggle
     el.apiSwitch.addEventListener('change', () => {
         el.apiConfig.classList.toggle('open', el.apiSwitch.checked);
+    });
+
+    // API preset selection
+    const API_PRESETS = {
+        openai:       { endpoint: 'https://api.openai.com/v1/chat/completions', model: 'gpt-4o' },
+        deepseek:     { endpoint: 'https://api.deepseek.com/v1/chat/completions', model: 'deepseek-chat' },
+        qwen:         { endpoint: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', model: 'qwen-plus' },
+        glm:          { endpoint: 'https://open.bigmodel.cn/api/paas/v4/chat/completions', model: 'glm-4-plus' },
+        siliconflow:  { endpoint: 'https://api.siliconflow.cn/v1/chat/completions', model: 'deepseek-llm' },
+        kimi:         { endpoint: 'https://api.moonshot.cn/v1/chat/completions', model: 'moonshot-v1-8k' },
+        lingyi:       { endpoint: 'https://api.lingyiwanwu.com/v1/chat/completions', model: 'yi-lightning' },
+        api2d:        { endpoint: 'https://openapi.api2d.net/v1/chat/completions', model: 'gpt-4o' }
+    };
+    el.apiPreset.addEventListener('change', () => {
+        const val = el.apiPreset.value;
+        if (val && API_PRESETS[val]) {
+            const preset = API_PRESETS[val];
+            el.apiEndpoint.value = preset.endpoint;
+            el.apiModel.value = preset.model;
+        } else {
+            el.apiEndpoint.value = '';
+            el.apiModel.value = 'gpt-4o';
+        }
     });
 
     // Step 2: Add task
@@ -1750,6 +1775,7 @@ function init() {
         el.apiEndpoint.value = '';
         el.apiKey.value = '';
         el.apiModel.value = 'gpt-4o';
+        el.apiPreset.value = '';
         renderTaskList();
         goToStep(1);
         showToast('已重置所有数据', 'info');

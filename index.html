@@ -100,8 +100,22 @@
                             </div>
                             <div class="api-config" id="apiConfigArea">
                                 <div class="form-group">
+                                    <label>选择服务商 <span style="font-weight:400;font-size:0.8rem;color:var(--neutral-400)">（选填后自动填入地址和模型）</span></label>
+                                    <select id="apiPreset" class="form-input">
+                                        <option value="">—— 手动输入 ——</option>
+                                        <option value="openai">OpenAI (GPT-4o)</option>
+                                        <option value="deepseek">DeepSeek (国产·免梯子)</option>
+                                        <option value="qwen">通义千问 (阿里·免梯子)</option>
+                                        <option value="glm">智谱 GLM (清华·免梯子)</option>
+                                        <option value="siliconflow">SiliconFlow (聚合模型·免梯子)</option>
+                                        <option value="kimi">Kimi (月之暗面·免梯子)</option>
+                                        <option value="lingyi">零一万物 (Yi·免梯子)</option>
+                                        <option value="api2d">API2D (OpenAI中转·国内付)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label>API 地址</label>
-                                    <input type="text" id="apiEndpoint" class="form-input" placeholder="https://api.openai.com/v1/chat/completions">
+                                    <input type="text" id="apiEndpoint" class="form-input" placeholder="选择服务商后自动填入">
                                 </div>
                                 <div class="form-group">
                                     <label>API Key</label>
@@ -109,7 +123,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>模型名称</label>
-                                    <input type="text" id="apiModel" class="form-input" value="gpt-4o" placeholder="gpt-4o">
+                                    <input type="text" id="apiModel" class="form-input" value="gpt-4o" placeholder="选择服务商后自动填入">
                                 </div>
                                 <p class="form-tip"><i class="fas fa-info-circle"></i> 接入后生成的计划将更贴合你的个人需求。不接入则使用内置引擎工作。</p>
                             </div>
