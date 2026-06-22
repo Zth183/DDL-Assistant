@@ -1,5 +1,5 @@
 /* ============================================
-   期末全能助手 - Application Logic
+   大学生DDL神器 - Application Logic
    ============================================ */
 ;(function() {
 'use strict';
@@ -1468,7 +1468,7 @@ function generateFeedbackReply(question) {
 function exportAll() {
     const name = state.user.name || '同学';
     let text = `========================================\n`;
-    text += `  期末全能助手 - 完整方案\n`;
+    text += `  大学生DDL神器 - 完整方案\n`;
     text += `  学生：${name}\n`;
     text += `  生成日期：${formatDate(getToday())}\n`;
     text += `  任务数：${state.tasks.length}\n`;
@@ -1600,7 +1600,7 @@ function exportPreToWord() {
         });
     });
 
-    htmlContent += `<div class="footer">由「期末全能助手」AI 自动生成 · 请根据实际情况修改后使用</div>`;
+    htmlContent += `<div class="footer">由「大学生DDL神器」AI 自动生成 · 请根据实际情况修改后使用</div>`;
     htmlContent += `</body></html>`;
 
     const blob = new Blob(['﻿' + htmlContent], { type: 'application/msword;charset=utf-8' });
@@ -1773,7 +1773,7 @@ function init() {
         renderTaskList();
     }
 
-    console.log('📚 期末全能助手已启动！');
+    console.log('📚 大学生DDL神器已启动！');
 }
 
 // ===================== START =====================
